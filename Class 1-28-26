@@ -1,0 +1,42 @@
+-- create
+CREATE TABLE ICONICS (
+  IconID varchar(4) PRIMARY KEY,
+  F_Name VARCHAR2(16) NOT NULL,
+  L_NAME VARCHAR2(16) NOT NULL,
+  Adress VARCHAR2(25)
+);
+
+-- insert
+INSERT INTO ICONICS VALUES ('SH22', 'Sherlock', 'Holmes', '221B Baker Street');
+INSERT INTO ICONICS VALUES ('BS74', 'Bart', 'Simpson', '742 Evergreen Terrace');
+INSERT INTO ICONICS VALUES ('HH12','Hank', 'Hill', '123 Rainey Street');
+INSERT INTO ICONICS VALUES ('BW10','Bruce', 'Wayne', '1007 Mountain Drive');
+INSERT INTO ICONICS VALUES ('FF17','Fran', 'Fine', '17 East 76th Street');
+
+-- fetch 
+SELECT * FROM ICONICS;
+
+ALTER Table ICONICS 
+  ADD CITY VARCHAR2(15);
+  
+SELECT * FROM ICONICS;
+
+ALTER Table ICONICS 
+  MODIFY CITY VARCHAR2(5);
+  
+SELECT * FROM ICONICS;
+
+ALTER TABLE ICONICS
+  ADD State VARCHAR2(2);
+  
+INSERT INTO ICONICS VALUES ('WA00','Wednesday', 'Addams', '0001 Cemetary Lane', null, 'NY');
+  
+SELECT * FROM ICONICS;
+  
+UPDATE ICONICS
+  SET city = 'NY'
+  WHERE IconID = 'BW10';
+
+SELECT F_NAME, L_NAME 
+FROM ICONICS 
+WHERE CITY = 'NY';
