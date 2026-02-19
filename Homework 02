@@ -1,0 +1,20 @@
+CREATE TABLE Guests (
+Guest_ID varchar(8) Primary Key Not Null,
+First_Name varchar(16),
+Last_Name varchar(16),
+DOBirth varchar(10), --e.g. 07/04/1776
+Field_ID varchar(4) Not Null,
+GEN_ID varchar(4) Not Null
+);
+CREATE TABLE DayOfWeek (
+DOWeek int,
+Day_Name varchar(9)
+);
+CREATE TABLE Specialty (
+Field_ID varchar(4) Primary Key Not Null,
+Field_Name varchar(10)
+);
+CREATE TABLE Generation (
+GEN_ID varchar(4) Primary Key Not Null,
+GEN_Name varchar(25)
+);
