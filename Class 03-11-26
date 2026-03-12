@@ -1,106 +1,61 @@
-DROP TABLE IF EXISTS HOURLY_RATE
 
-CREATE TABLE HOURLY_RATE(
-  ID VARCHAR(4) PRIMARY KEY,
-  HOURS INTEGER,
-  RATE DECIMAL(5,2),
-  PAY DECIMAL(7,2),
-  DATE_USED DATE
+CREATE TABLE GAMES(
+  GID VARCHAR(4) PRIMARY KEY NOT NULL,
+-- INSTRUCTIONS SAID VARCHAR(16) BUT MADE 17 TO ACCOUNT FOR THE LONGER GAME NAME GIVEN BELOW
+  GAME_NAME VARCHAR(17),
+  MIN_PLAYERS INT,
+  MAX_PLAYERS INT
 );
 
-SELECT SYSDATE FROM DUAL;
-SELECT CURRENT_TIMESTAMP FROM DUAL;
-ALTER SESSION 
-SET NLS_DATE_FORMAT = 'MM/DD/YYYY';
 
-INSERT INTO HOURLY_RATE VALUES('AA11', 5, 23.50, 0, '03/11/2026');
---INSERT INTO HOURLY_RATE VALUES('AB22', 6, 23.50, 0, '11-MAR-2026');
---INSERT INTO HOURLY_RATE VALUES('CD88', 10,175.00, 0, '02-JAN-2026');
---INSERT INTO HOURLY_RATE VALUES('FF80', 8, 63.25, 0, '04-JAN-2026');
---INSERT INTO HOURLY_RATE VALUES('SK01', 5, 70.77, 0, '03-JAN-2026');
---INSERT INTO HOURLY_RATE VALUES('AX01', 7,55.55, 0, '18-MAR-2026');
-
-UPDATE HOURLY_RATE
-SET PAY = HOURS*RATE;
-SELECT * FROM HOURLY_RATE;
-
-SELECT SUM(HOURS) FROM HOURLY_RATE;
-SELECT MAX(HOURS) FROM HOURLY_RATE;
-SELECT MIN(HOURS) FROM HOURLY_RATE;
-SELECT AVG(HOURS) FROM HOURLY_RATE;
-SELECT COUNT(HOURS) FROM HOURLY_RATE;
-SELECT COUNT(DISTINCT HOURS) FROM HOURLY_RATE;
-
-
-
---DROP TABLE employee CASCADE CONSTRAINTS;
-CREATE TABLE employee (
-  fname    varchar2(15) not null, 
-  minit    varchar2(1),
-  lname    varchar2(15) not null,
-  ssn      char(9),
-  bdate    date,
-  address  varchar2(50),
-  sex      char,
-  salary   number(10,2),
-  superssn char(9),
-  dno      number(4),
-  primary key (ssn),
-  foreign key (superssn) references employee(ssn)
---  foreign key (dno) references department(dnumber)
+CREATE TABLE PLAYER(
+  PID VARCHAR(8) PRIMARY KEY NOT NULL,
+  FIRST_NAME VARCHAR(10),
+  LAST_NAME VARCHAR(16),
+  GID VARCHAR(4)
 );
 
---DROP TABLE department CASCADE CONSTRAINTS;
-CREATE TABLE department (
-  dname        varchar2(25) not null,
-  dnumber      number(4),
-  mgrssn       char(9) not null, 
-  mgrstartdate date,
-  primary key (dnumber),
-  unique (dname),
-  foreign key (mgrssn) references employee(ssn)
+
+CREATE TABLE PLAYER_TO_GAMES(
+  PID VARCHAR(4) NOT NULL,
+  GID VARCHAR(4) NOT NULL,
+  LAST_PLAYED DATE,
+  MINUTES_PLAYED INT
 );
 
-ALTER TABLE employee ADD (
-  foreign key (dno) references department(dnumber)
-);
 
---DROP TABLE dept_locations CASCADE CONSTRAINTS;
-CREATE TABLE dept_locations (
-  dnumber   number(4),
-  dlocation varchar2(15), 
-  primary key (dnumber,dlocation),
-  foreign key (dnumber) references department(dnumber)
-);
+INSERT INTO GAMES VALUES('MN01', 'MONOPOLY', 2, 10);
+INSERT INTO GAMES VALUES('CH01', 'CHESS', 2, 2);
+INSERT INTO GAMES VALUES('CA22', 'CATAN', 2, 6);
+INSERT INTO GAMES VALUES('EK09', 'EXPLODING KITTENS', 2, 5);
 
---DROP TABLE project CASCADE CONSTRAINTS;
-CREATE TABLE project (
-  pname      varchar2(25) not null,
-  pnumber    number(4),
-  plocation  varchar2(15),
-  dnum       number(4) not null,
-  primary key (pnumber),
-  unique (pname),
-  foreign key (dnum) references department(dnumber)
-);
+SELECT * FROM GAMES;
 
---DROP TABLE works_on CASCADE CONSTRAINTS;
-CREATE TABLE works_on (
-  essn   char(9),
-  pno    number(4),
-  hours  number(4,1),
-  primary key (essn,pno),
-  foreign key (essn) references employee(ssn),
-  foreign key (pno) references project(pnumber)
-);
 
---DROP TABLE dependent CASCADE CONSTRAINTS;
-CREATE TABLE dependent (
-  essn           char(9),
-  dependent_name varchar2(15),
-  sex            char,
-  bdate          date,
-  relationship   varchar2(8),
-  primary key (essn,dependent_name),
-  foreign key (essn) references employee(ssn)
-);
+INSERT INTO PLAYER VALUES ('AE12', 'ALBERT', 'EINSTEIN', 'MN01');
+INSERT INTO PLAYER VALUES ('GK12', 'GARY', 'KASPAROV', 'CH01');
+INSERT INTO PLAYER VALUES ('BF12', 'BOBBY', 'FISHER', 'CH01');
+INSERT INTO PLAYER VALUES ('SK01', 'SOPHIA', 'KETCHEN', 'CA22');
+INSERT INTO PLAYER VALUES ('BK01', 'BRYCE', 'KETCHEN', 'EK09');
+
+
+SELECT * FROM PLAYER;
+
+INSERT INTO PLAYER_TO_GAMES VALUES ('AE12', 'MN01', '10-OCT-2026', 25);
+INSERT INTO PLAYER_TO_GAMES VALUES ('GK12', 'CH01', '12-NOV-2026', 59);
+INSERT INTO PLAYER_TO_GAMES VALUES ('BF12', 'CH01', '28-DEC-2026', 21);
+
+
+
+SELECT GID, MAX(MINUTES_PLAYED) 
+FROM PLAYER_TO_GAMES
+GROUP BY GID;
+SELECT GID, MIN(MINUTES_PLAYED) 
+FROM PLAYER_TO_GAMES
+GROUP BY GID;
+SELECT GID, COUNT(MINUTES_PLAYED) 
+FROM PLAYER_TO_GAMES
+GROUP BY GID;
+SELECT GID, AVG(MINUTES_PLAYED) 
+FROM PLAYER_TO_GAMES
+GROUP BY GID;
